@@ -8,9 +8,16 @@ const headers = {
   'Authorization' : 'Client-ID 226919d0cce54d5'
 };
 
+var wifiRequest = false;
+
 router.get('/**', function(req, res, next) {
   if (!authorized(req.headers.authorization))
     return res.sendStatus(401);
+
+  if (req.headers.network == "wifi")
+    wifiRequest = true;
+  else
+    wifiRequest = false;
 
   next();
 });
@@ -133,7 +140,9 @@ function format(post) {
       !post.type.endsWith('gif')) {
     var compressedLink = post.link.replace(
       'https://i.imgur.com',
-      'http://honeycompressor.ddns.net:5055/imgur/i');
+      wifiRequest ?
+        'http://192.168.2.11:5055/imgur/i' :
+        'http://honeycompressor.ddns.net:5055/imgur/i');
     post.link = compressedLink.replace('.png', '.jpg');
   }
   if (post.type)
