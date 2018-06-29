@@ -8,16 +8,9 @@ const headers = {
   'Authorization' : 'Client-ID 226919d0cce54d5'
 };
 
-var wifiRequest = false;
-
 router.get('/**', function(req, res, next) {
   if (!authorized(req.headers.authorization))
     return res.sendStatus(401);
-
-  if (req.headers.network == "wifi")
-    wifiRequest = true;
-  else
-    wifiRequest = false;
 
   next();
 });
@@ -135,15 +128,12 @@ function parseResponse(body) {
 }
 
 function format(post) {
-  if (post.type &&
-      post.type.startsWith('image') &&
-      !post.type.endsWith('gif')) {
-    var compressedLink = post.link.replace(
+  if (isImage(post.type)) {
+    post.compressedLink = post.link.replace(
       'https://i.imgur.com',
-      wifiRequest ?
-        'http://192.168.2.11:5055/imgur/i' :
-        'http://honeycompressor.ddns.net:5055/imgur/i');
-    post.link = compressedLink.replace('.png', '.jpg');
+      'http://honeycompressor.ddns.net:5055/imgur/i')
+      .replace('.png', '.jpg');
+    post.link = post.link.replace('.png', '.jpg');
   }
   if (post.type)
     post.requestLoad = !post.type.includes('gif') && !post.type.includes('video');
@@ -180,6 +170,10 @@ function format(post) {
   delete post.height;
   delete post.width;
   delete post.processing;
+}
+
+function isImage(type) {
+  return type && type.startsWith('image') && !type.endsWith('gif');
 }
 
 module.exports = router;
