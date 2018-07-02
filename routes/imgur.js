@@ -53,7 +53,7 @@ router.get('/t/:tag', function(req, res) {
     url: imgurUrl + `t/${tag}`,
     headers: headers
   }, function(error, response, body) {
-    if (error || (response.statusCode && response.statusCode != 200))
+    if (error && (response.statusCode && response.statusCode != 200))
       return res.sendStatus(response.statusCode);
 
     return res.send(parseResponse(body));
@@ -111,6 +111,9 @@ function authorized(header) {
 
 function parseResponse(body) {
   var data = JSON.parse(body)['data'];
+
+  if (data.error == "Not Found")
+    return [];
 
   if (data.hasOwnProperty('items'))
     data = data['items'];
