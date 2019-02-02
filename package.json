@@ -8,6 +8,7 @@
   "dependencies": {
     "compression": "^1.7.2",
     "cookie-parser": "~1.4.3",
+    "cors": "^2.8.4",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
@@ -20,6 +21,7 @@
     "object-sizeof": "^1.2.0",
     "pako": "^1.0.6",
     "request": "^2.86.0",
-    "resize-base64": "^1.0.12"
+    "resize-base64": "^1.0.12",
+    "rpi-dht-sensor": "^0.1.1"
   }
 }
